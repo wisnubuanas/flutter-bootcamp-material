@@ -4,19 +4,20 @@ import 'package:bootcamp_material/material/16_networking_http.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-// Future<http.Response> getData() async {
-//   var result =
-//       await http.get(Uri.parse("http://jsonplaceholder.typicode.com/users"));
-//   print(result.body);
-//   return result;
-// }
+Future<http.Response> getData() async {
+  var result =
+      await http.get(Uri.parse("http://192.168.137.164:8082/api/user/getAll"));
+  print(result.body);
+  return result;
+}
+
 Future<http.Response> postData() async {
   Map<String, dynamic> data = {
-    "name": "jhon doe",
+    "nama": "jhon doe",
     "email": "postmethod@test.com"
   };
   var result = await http.post(
-      Uri.parse("http://jsonplaceholder.typicode.com/users"),
+      Uri.parse("http://192.168.137.164:8082/api/user/insert"),
       headers: <String, String>{
         "Content-Type": "application/json; charset=UTF-8"
       },
@@ -27,11 +28,11 @@ Future<http.Response> postData() async {
 
 Future<http.Response> updateData(int id) async {
   Map<String, dynamic> data = {
-    "name": "jhon doe",
+    "nama": "jhon doe",
     "email": "postmethod@test.com"
   };
   var result = await http.put(
-      Uri.parse("http://jsonplaceholder.typicode.com/users/${id}"),
+      Uri.parse("http://192.168.137.164:8082/api/user/update/${id}"),
       headers: <String, String>{
         "Content-Type": "application/json; charset=UTF-8"
       },
@@ -65,6 +66,7 @@ class NetworkinghttpApp extends StatelessWidget {
           onPressed: () {
             postData();
           },
+          child: Icon(Icons.add),
         ),
         body: FutureBuilder<http.Response>(
           // future: data,
@@ -76,8 +78,9 @@ class NetworkinghttpApp extends StatelessWidget {
                 itemCount: json.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(json[index]["name"]),
-                    subtitle: Text(json[index]["email"]),
+                    title: Text(json[index]["nama"] ?? ''),
+                    subtitle: Text(json[index]["email"] ?? ''),
+                    onTap: () {},
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
