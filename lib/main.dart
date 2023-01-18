@@ -32,7 +32,10 @@ import 'package:bootcamp_material/material/17_local_api.dart';
 import 'material/networking_http.dart';
 
 void main() {
-  runApp(NetworkinghttpApp());
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: NetworkinghttpApp(),
+  ));
 }
 
 // via firebase
