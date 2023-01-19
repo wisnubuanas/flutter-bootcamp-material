@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "718229198125",
-    "project_id": "flutter-firebase-crud-b0615",
-    "storage_bucket": "flutter-firebase-crud-b0615.appspot.com"
+    "project_number": "998118069720",
+    "project_id": "bootcampmaterial-c4f37",
+    "storage_bucket": "bootcampmaterial-c4f37.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:718229198125:android:762e585f5a5969f5df2fa4",
+        "mobilesdk_app_id": "1:998118069720:android:03073dc62266b51a488ead",
         "android_client_info": {
           "package_name": "com.kodehive.bootcamp_material"
         }
       },
       "oauth_client": [
         {
-          "client_id": "718229198125-pk4pgu926pbenatusuf2ces92e5uig1t.apps.googleusercontent.com",
+          "client_id": "998118069720-mc3gjqnsrv4cqqfpqgrtnfdal97s3cks.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBnyE2o1o1FLaYN3Fie5M2a0b9rQ9GQFUs"
+          "current_key": "AIzaSyDsV1XuJbtKbjoSqPpKol8B_Evck0PdI5o"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "718229198125-pk4pgu926pbenatusuf2ces92e5uig1t.apps.googleusercontent.com",
+              "client_id": "998118069720-mc3gjqnsrv4cqqfpqgrtnfdal97s3cks.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "998118069720-dubpobqlmcoq4qb4prgksdq1gu2vcbce.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.myFirstApp"
+              }
             }
           ]
         }

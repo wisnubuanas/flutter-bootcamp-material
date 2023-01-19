@@ -3,6 +3,7 @@ import 'package:bootcamp_material/material/7_row_column_example.dart';
 import 'package:bootcamp_material/material/NavigatorRoute.dart';
 import 'package:bootcamp_material/material/assignment5.dart';
 import 'package:bootcamp_material/material/commerce_app.dart';
+import 'package:bootcamp_material/material/main_page.dart';
 import 'package:bootcamp_material/material/module14_resources/tween_animation_builder.dart';
 import 'package:bootcamp_material/material/profilresume.dart';
 import 'package:bootcamp_material/material/nav_rout.dart';
@@ -28,14 +29,14 @@ import 'package:bootcamp_material/material/10_layout_practice.dart';
 import 'package:bootcamp_material/material/11_interactive_state.dart';
 import 'package:bootcamp_material/material/11_interactive_widget.dart';
 import 'package:bootcamp_material/material/17_local_api.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:bootcamp_material/firebase_options.dart';
 
 import 'material/networking_http.dart';
 
-void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: NetworkinghttpApp(),
-  ));
+void main() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(NetworkAPI());
 }
 
 // via firebase
