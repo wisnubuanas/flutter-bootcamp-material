@@ -155,6 +155,10 @@ class _NetworkinghttpAppState extends State<NetworkinghttpApp> {
             return Column(
                 children: snapshot.data!.docs
                     .map((e) => ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.black,
+                            child: Text(e["nama"][0] ?? ''),
+                          ),
                           title: Text(e["nama"]),
                           subtitle: Text(e["email"]),
                           trailing: Row(
