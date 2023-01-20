@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:bootcamp_material/material/16_networking_http.dart';
 import 'package:bootcamp_material/material/module17_resources/user_model.dart';
@@ -6,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
-String localip = "192.168.0.123:8082";
+String localip = "192.168.0.104:8082";
 
-// Future<http.Response> getData() async {
-//   var result = await http.get(Uri.parse("http://$localip/api/user/getAll"));
-//   print(result.body);
-//   return result;
-// }
+Future<http.Response> getData() async {
+  var result = await http.get(Uri.parse("http://$localip/api/user/getAll"));
+  print(result.body);
+  return result;
+}
 
 Future<http.Response> updateData(int id, Map<String, String> data) async {
   var result = await http.put(
@@ -32,6 +33,16 @@ Future<http.Response> deleteData(int id) async {
       "Content-Type": "application/json; charset=UTF-8"
     },
   );
+  print(result.statusCode);
+  return result;
+}
+
+Future<http.Response> inputData(Map<String, String> data) async {
+  var result = await http.post(Uri.parse("http://$localip/api/user/insert"),
+      headers: <String, String>{
+        "Content-Type": "application/json; charset=UTF-8"
+      },
+      body: jsonEncode(data));
   print(result.statusCode);
   return result;
 }
@@ -64,23 +75,12 @@ class _NetworkinghttpAppState extends State<NetworkinghttpApp> {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference users = firestore.collection("users");
 
-    Future<http.Response> inputData(Map<String, String> data) async {
-      var result = await http.post(
-          Uri.parse("http://127.0.0.1/api/user/insert"),
-          headers: <String, String>{
-            "Content-Type": "application/json; charset=UTF-8"
-          },
-          body: jsonEncode(data));
-      print(result.statusCode);
-      return result;
-    }
-
     // var data = getData();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         centerTitle: true,
-        title: Text("Flutter x Spring"),
+        title: Text("Flutter x Firebase"),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black,
@@ -88,6 +88,9 @@ class _NetworkinghttpAppState extends State<NetworkinghttpApp> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
+                add1.clear();
+                add2.clear();
+                add3.clear();
                 return AlertDialog(
                     scrollable: true,
                     title: Text('Tambah Anggota'),
@@ -154,109 +157,122 @@ class _NetworkinghttpAppState extends State<NetworkinghttpApp> {
                     .map((e) => ListTile(
                           title: Text(e["nama"]),
                           subtitle: Text(e["email"]),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    add1.text = e["nama"];
+                                    add2.text = e["email"];
+                                    add3.text = e["gender"];
+
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                              scrollable: true,
+                                              title: Text('Edit Anggota'),
+                                              content: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Form(
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      TextFormField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                          labelText: 'Nama',
+                                                          icon: Icon(
+                                                              Icons.people),
+                                                        ),
+                                                        controller: add1,
+                                                      ),
+                                                      TextFormField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                          labelText: 'Email',
+                                                          icon:
+                                                              Icon(Icons.email),
+                                                        ),
+                                                        controller: add2,
+                                                      ),
+                                                      TextFormField(
+                                                        decoration:
+                                                            InputDecoration(
+                                                          labelText: 'Gender',
+                                                          icon:
+                                                              Icon(Icons.male),
+                                                        ),
+                                                        controller: add3,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              actions: [
+                                                ElevatedButton(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            backgroundColor:
+                                                                Colors.black),
+                                                    child: Icon(Icons.edit),
+                                                    // child: Text("Edit"),
+                                                    onPressed: () {
+                                                      users.doc(e.id).update({
+                                                        "nama": add1.text,
+                                                        "email": add2.text,
+                                                        "gender": add3.text,
+                                                      });
+                                                      add1.clear();
+                                                      add2.clear();
+                                                      add3.clear();
+                                                      Navigator.pop(context);
+                                                    })
+                                              ]);
+                                        });
+                                  },
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: Colors.green,
+                                  )),
+                              IconButton(
+                                  onPressed: () {
+                                    users.doc(e.id).delete();
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  )),
+                            ],
+                          ),
                         ))
                     .toList());
+
+            // IconButton(
+            //     onPressed: () {
+            //       firestore.collection("users").doc(e.id).delete();
+            //     },
+            //     icon: Icon(
+            //       Icons.delete,
+            //       color: Colors.red,
+            //     ));
+            // return Column(
+            //     children: snapshot.data!.docs
+            //         .map((e) => ListTile(
+            //               e["nama"],
+            //               e["email"],
+            //               onUpdate: () {
+            //                 users.doc(e.id).update({"email": e["email"] + 1});
+            //               },
+            //               onDelete: () {
+            //                 users.doc(e.id).delete();
+            //               },
+            //             ))
+            //         .toList());
           } else {
             return Text("loading...");
           }
         },
-        // body: FutureBuilder<http.Response>(
-        //   future: data,
-        //   builder: (context, snapshot) {
-        //     if (snapshot.hasData) {
-        //       List<dynamic> json = jsonDecode(snapshot.data!.body);
-        //       return ListView.builder(
-        //         itemCount: json.length,
-        //         itemBuilder: (context, index) {
-        //           return ListTile(
-        //             title: Text(json[index]["nama"] ?? ''),
-        //             subtitle: Text(json[index]["email"] ?? ''),
-        //             onTap: () {},
-        //             trailing: Row(
-        //               mainAxisSize: MainAxisSize.min,
-        //               children: [
-        //                 IconButton(
-        //                     onPressed: () async {
-        //                       add1.text = json[index]["nama"];
-        //                       add2.text = json[index]["email"];
-        //                       add3.text = json[index]["gender"];
-        //                       showDialog(
-        //                           context: context,
-        //                           builder: (BuildContext context) {
-        //                             return AlertDialog(
-        //                                 scrollable: true,
-        //                                 title: Text('Tambah'),
-        //                                 content: Padding(
-        //                                   padding: const EdgeInsets.all(8.0),
-        //                                   child: Form(
-        //                                     child: Column(
-        //                                       children: <Widget>[
-        //                                         TextFormField(
-        //                                           decoration: InputDecoration(
-        //                                             labelText: ' nama',
-        //                                             icon: Icon(Icons.people),
-        //                                           ),
-        //                                           controller: add1,
-        //                                         ),
-        //                                         TextFormField(
-        //                                           decoration: InputDecoration(
-        //                                             labelText: 'email',
-        //                                             icon: Icon(Icons.email),
-        //                                           ),
-        //                                           controller: add2,
-        //                                         ),
-        //                                         TextFormField(
-        //                                           decoration: InputDecoration(
-        //                                             labelText: 'gender',
-        //                                             icon: Icon(
-        //                                                 Icons.family_restroom),
-        //                                           ),
-        //                                           controller: add3,
-        //                                         ),
-        //                                       ],
-        //                                     ),
-        //                                   ),
-        //                                 ),
-        //                                 actions: [
-        //                                   ElevatedButton(
-        //                                       child: Text("Update"),
-        //                                       onPressed: () async {
-        //                                         await updateData(
-        //                                           json[index]["id"],
-        //                                           {
-        //                                             "nama": add1.text,
-        //                                             "email": add2.text,
-        //                                             "gender": add3.text
-        //                                           },
-        //                                         );
-        //                                         add1.clear();
-        //                                         add2.clear();
-        //                                         add3.clear();
-        //                                         setState(() {});
-        //                                         Navigator.pop(context);
-        //                                       })
-        //                                 ]);
-        //                           });
-        //                       setState(() {});
-        //                     },
-        //                     icon: Icon(Icons.edit)),
-        //                 IconButton(
-        //                     onPressed: () async {
-        //                       await deleteData(json[index]["id"]);
-        //                       setState(() {});
-        //                     },
-        //                     icon: Icon(Icons.delete))
-        //               ],
-        //             ),
-        //           );
-        //         },
-        //       );
-        //     } else {
-        //       return Center(
-        //         child: CircularProgressIndicator(),
-        //       );
-        //     }
-        //   },
       ),
     );
   }
